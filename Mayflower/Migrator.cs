@@ -43,7 +43,7 @@ namespace Mayflower
 
             var dir = options.GetFolder();
 
-            Log("Mayflower.NET Migrator");
+            Log("Mayflower.NET Migrator (with support for included files)");
             Log("    Directory:        " + dir);
             Log("    Provider:         " + options.Provider);
 

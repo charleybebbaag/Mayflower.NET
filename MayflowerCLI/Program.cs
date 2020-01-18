@@ -84,7 +84,7 @@ namespace MayflowerCLI
 
             if (showVersion)
             {
-                Console.WriteLine("Mayflower.NET - Version " + Migrator.GetVersion());
+                Console.WriteLine("Mayflower.NET (with support for included files) - Version " + Migrator.GetVersion());
                 Console.WriteLine();
                 return Command.None;
             }
