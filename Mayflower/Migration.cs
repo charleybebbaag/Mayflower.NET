@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -21,7 +22,7 @@ namespace Mayflower
     {
         static readonly MD5CryptoServiceProvider s_md5Provider = new MD5CryptoServiceProvider();
         static readonly Regex s_lineEndings = new Regex("\r\n|\n\r|\n|\r", RegexOptions.Compiled);
-        static readonly Regex s_reference = new Regex(@"^\\s*:r\\s*(.*)\\s*$", RegexOptions.Compiled | RegexOptions.Multiline);
+        static readonly Regex s_reference = new Regex("^\\s*:r\\s*(.*)\\s*$", RegexOptions.Compiled | RegexOptions.Multiline);
 
         public List<string> SqlCommands { get; }
         public string Hash { get; }
@@ -49,8 +50,8 @@ namespace Mayflower
             var includedRelativeFilepath = GetRelativeIncludedFilepath(sql);
             if (!string.IsNullOrEmpty(includedRelativeFilepath))
             {
-                var fileDirectory = Path.GetDirectoryName(filePath);
-                IncludedFilepath = Path.Combine(fileDirectory, includedRelativeFilepath);
+                var fileDirectory = Path.GetFullPath(Path.GetDirectoryName(filePath));
+                IncludedFilepath = Path.GetFullPath(Path.Combine(fileDirectory, includedRelativeFilepath));
                 // check if the included file is under the migration's folder
                 if (!CheckIncludedFilepath(fileDirectory, IncludedFilepath))
                 {
@@ -58,8 +59,15 @@ namespace Mayflower
                 }
 
                 // read the included file
-                sql = File.ReadAllText(IncludedFilepath, Encoding.GetEncoding("iso-8859-1"));
-                SqlCommands = commandSplitter.Split(sql).Where(s => s.Trim().Length > 0).ToList();
+                if (File.Exists(IncludedFilepath))
+                {
+                    sql = File.ReadAllText(IncludedFilepath, Encoding.GetEncoding("iso-8859-1"));
+                    SqlCommands = commandSplitter.Split(sql).Where(s => s.Trim().Length > 0).ToList();
+                }
+                else
+                {
+                    throw new Exception($"The migration {Filename} tries to include a file that does not exist: {IncludedFilepath}");
+                }
             }
         }
 
@@ -117,7 +125,7 @@ namespace Mayflower
             var match = s_reference.Match(sql);
             if (match.Success)
             {
-                return match.Groups[1].Value;
+                return match.Groups[1].Value.Trim();
             }
 
             return string.Empty;
