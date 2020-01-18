@@ -55,7 +55,8 @@ namespace Mayflower
                 // check if the included file is under the migration's folder
                 if (!CheckIncludedFilepath(fileDirectory, IncludedFilepath))
                 {
-                    throw new Exception($"The included file '{IncludedFilepath}' is not relative to the migration's folder.");
+                    throw new Exception($"The migration '{Filename}' tries to include a file that is not relative to the migration's " +
+                                        $"folder: '{IncludedFilepath}'");
                 }
 
                 // read the included file
@@ -66,7 +67,7 @@ namespace Mayflower
                 }
                 else
                 {
-                    throw new Exception($"The migration {Filename} tries to include a file that does not exist: {IncludedFilepath}");
+                    throw new Exception($"The migration '{Filename}' tries to include a file that does not exist: {IncludedFilepath}");
                 }
             }
         }

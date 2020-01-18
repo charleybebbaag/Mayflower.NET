@@ -84,7 +84,7 @@ namespace MayflowerCLI
 
             if (showVersion)
             {
-                Console.WriteLine("Mayflower.NET (with support for included files) - Version " + Migrator.GetVersion());
+                Console.WriteLine("Mayflower.NET (charleybebbaag/Mayflower.NET forked from bretcope/Mayflower.NET) - Version " + Migrator.GetVersion());
                 Console.WriteLine();
                 return Command.None;
             }
@@ -105,6 +105,7 @@ namespace MayflowerCLI
             Console.WriteLine("  The databse connection can be specified using a full connection string with --connection,");
             Console.WriteLine("  or Mayflower can generate an integrated auth connection string using the --database and");
             Console.WriteLine("  optional --server arguments.");
+            Console.WriteLine("  (charleybebbaag/Mayflower.NET forked from bretcope/Mayflower.NET).");
             Console.WriteLine();
             optionSet.WriteOptionDescriptions(Console.Out);
         }

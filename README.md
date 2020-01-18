@@ -2,6 +2,8 @@
 
 Mayflower is a simple, forward-only, database migrator for SQL Server based on the migrator which Stack Overflow uses.
 
+This is a fork of [bretcope / Mayflower.NET](https://github.com/bretcope/Mayflower.NET). This fork adds the possibility to include a file in a migration (see [this issue](https://github.com/bretcope/Mayflower.NET/issues/11))
+
 ## Usage
 
 ### Creating Migrations
@@ -33,6 +35,35 @@ We recommend prefixing migration file names with a zero-padded number so that th
 0004 - Add auth columns to Users.sql
 ...
 ```
+
+### Including a File in a Migration
+
+It is possible to include a file in a migration using the special string `:r`. Example:
+
+```
+:r procedures\proc1.sql
+```
+
+`:r` must appear at the begining of the migration, after some spaces or after the special comment `-- no transaction --`.
+
+So it's ok to use include a file like this:
+```
+
+
+   :r procedures\proc1.sql
+```
+
+or like this:
+```
+-- no transaction --
+:r procedures\proc1.sql
+```
+
+This approach for importing a file is inspired from the tool `sqlcmd` that supports the command `:r`
+
+Use case:
+The procedures / functions / triggers / views are mantained in their own files. When such an object is released, a new migration is created that includes the file that contains the object.
+Advantage: when I debug an issue and I want to see the changes for a procedure, it is easy to do so by using the history option of svn/github/hg.
 
 ### Running Migrations
 

@@ -1,0 +1,1 @@
+In order to test the migrations 0004 -> 0006, it is necessary to change the extension from txt to sql.
