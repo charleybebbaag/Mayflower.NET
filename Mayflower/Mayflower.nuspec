@@ -3,10 +3,10 @@
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
-    <title>Mayflower</title>
-    <authors>Bret Copeland</authors>
-    <owners>Bret Copeland</owners>
-    <projectUrl>https://github.com/bretcope/Mayflower.NET</projectUrl>
+    <title>Mayflower (Charley Bebbaag fork)</title>
+    <authors>Charley Bebbaag</authors>
+    <owners>Charley Bebbaag</owners>
+    <projectUrl>https://github.com/charleybebbaag/Mayflower.NET</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes></releaseNotes>
