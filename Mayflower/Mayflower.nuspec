@@ -8,7 +8,7 @@
     <owners>Charley Bebbaag</owners>
     <projectUrl>https://github.com/charleybebbaag/Mayflower.NET</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Mayflower is a simple, forward-only, database migrator for SQL Server based on the migrator which Stack Overflow uses. This is a fork of [bretcope / Mayflower.NET](https://github.com/bretcope/Mayflower.NET) that allows to include in a migration another script (that contains a procedure or a trigger or a view) </description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>SQL Migration</tags>
