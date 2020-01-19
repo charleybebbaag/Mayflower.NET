@@ -70,9 +70,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mayflower\Mayflower.csproj">
+    <ProjectReference Include="..\Mayflower\MayflowerF9.csproj">
       <Project>{f8b16d25-faff-4605-8f17-3583795aafbd}</Project>
-      <Name>Mayflower</Name>
+      <Name>MayflowerF9</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
