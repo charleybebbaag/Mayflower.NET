@@ -62,7 +62,7 @@ deploy:
   - provider: GitHub
     release: $(APPVEYOR_REPO_TAG_NAME)
     auth_token:
-      secure: gbdN6iXbtLTk1MiBecxRJvdoc6fR6x4AEFAQNuZ+UMR9NvQnXW12PXfd16gtGVGp
+      secure: ydv4d6HcjbsqPmSqA1/TJgj8HpG1S2tqOBfz+h7P/hYT/640tguzpkSPeDrOz4MW
     artifact: /^.*(\.nupkg|mayflower\.exe)$/
     draft: false
     prerelease: false
