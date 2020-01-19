@@ -69,14 +69,14 @@ deploy:
     on:
       appveyor_repo_tag: true
 
-  # for pre-release versions
-  - provider: NuGet
-    api_key:
-      secure: H5jmXKutTu22M4cFiVnFnuGG0aZMcIhyv7k+IXLDuT+X8jr3Usk5bnAlOcFEEkp8
-    artifact: /.*\.nupkg/
-    skip_symbols: false
-    on:
-      branch: master
+#  # for pre-release versions
+#  - provider: NuGet
+#    api_key:
+#      secure: H5jmXKutTu22M4cFiVnFnuGG0aZMcIhyv7k+IXLDuT+X8jr3Usk5bnAlOcFEEkp8
+#    artifact: /.*\.nupkg/
+#    skip_symbols: false
+#    on:
+#      branch: master
 
   # for release versions
   - provider: NuGet
