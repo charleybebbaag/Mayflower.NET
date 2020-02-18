@@ -40,6 +40,9 @@ build:
   publish_nuget_symbols: true
   verbosity: normal
 
+before_build:
+  - nuget restore
+
 #---------------------------------#
 #       tests configuration       #
 #---------------------------------#
