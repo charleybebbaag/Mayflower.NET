@@ -38,15 +38,16 @@ We recommend prefixing migration file names with a zero-padded number so that th
 
 ### Including a File in a Migration
 
-It is possible to include a file in a migration using the special string `:r`. Example:
+It is possible to include one or more files in a migration using the special string `:r`. Example:
 
 ```
 :r procedures\proc1.sql
+:r functions\func2.sql
 ```
 
-`:r` must appear at the begining of the migration, after some spaces or after the special comment `-- no transaction --`.
+The first`:r` must appear at the begining of the migration, after some spaces or after the special comment `-- no transaction --`.
 
-So it's ok to use include a file like this:
+So it's ok to include files like this:
 ```
 
 
@@ -57,6 +58,8 @@ or like this:
 ```
 -- no transaction --
 :r procedures\proc1.sql
+-- comment. An empty line or a line with spaces is accepted.
+:r functions\func2.sql
 ```
 
 This approach for importing a file is inspired from the tool `sqlcmd` that supports the command `:r`

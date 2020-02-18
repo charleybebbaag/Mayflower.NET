@@ -167,3 +167,4 @@ node_modules
 .idea
 
 .vs
+/packages/NUnit.3.12.0

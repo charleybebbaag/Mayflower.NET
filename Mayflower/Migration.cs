@@ -47,27 +47,43 @@ namespace Mayflower
             UseTransaction = !sql.StartsWith(NoTransactionToken);
 
             // check if the migration includes another file
-            var includedRelativeFilepath = GetRelativeIncludedFilepath(sql);
-            if (!string.IsNullOrEmpty(includedRelativeFilepath))
+            IList<string> includedRelativeFilepaths = null;
+            try
             {
-                var fileDirectory = Path.GetFullPath(Path.GetDirectoryName(filePath));
-                IncludedFilepath = Path.GetFullPath(Path.Combine(fileDirectory, includedRelativeFilepath));
-                // check if the included file is under the migration's folder
-                if (!CheckIncludedFilepath(fileDirectory, IncludedFilepath))
-                {
-                    throw new Exception($"The migration '{Filename}' tries to include a file that is not relative to the migration's " +
-                                        $"folder: '{IncludedFilepath}'");
-                }
+                includedRelativeFilepaths = GetRelativeIncludedFilepaths(sql);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error processing the migration '{Filename}'", ex);
+            }
 
-                // read the included file
-                if (File.Exists(IncludedFilepath))
+            if (includedRelativeFilepaths.Count > 0)
+            {
+                SqlCommands.Clear();
+                var fileDirectory = Path.GetFullPath(Path.GetDirectoryName(filePath));
+
+                foreach (var includedRelativeFilepath in includedRelativeFilepaths)
                 {
-                    sql = File.ReadAllText(IncludedFilepath, Encoding.GetEncoding("iso-8859-1"));
-                    SqlCommands = commandSplitter.Split(sql).Where(s => s.Trim().Length > 0).ToList();
-                }
-                else
-                {
-                    throw new Exception($"The migration '{Filename}' tries to include a file that does not exist: {IncludedFilepath}");
+                    IncludedFilepath = Path.GetFullPath(Path.Combine(fileDirectory, includedRelativeFilepath));
+                    // check if the included file is under the migration's folder
+                    if (!CheckIncludedFilepath(fileDirectory, IncludedFilepath))
+                    {
+                        throw new Exception(
+                            $"The migration '{Filename}' tries to include a file that is not relative to the migration's " +
+                            $"folder: '{IncludedFilepath}'");
+                    }
+
+                    // read the included file
+                    if (File.Exists(IncludedFilepath))
+                    {
+                        sql = File.ReadAllText(IncludedFilepath, Encoding.GetEncoding("iso-8859-1"));
+                        SqlCommands.AddRange(commandSplitter.Split(sql).Where(s => s.Trim().Length > 0));
+                    }
+                    else
+                    {
+                        throw new Exception(
+                            $"The migration '{Filename}' tries to include a file that does not exist: {IncludedFilepath}");
+                    }
                 }
             }
         }
@@ -108,28 +124,49 @@ namespace Mayflower
         }
 
         /// <summary>
-        /// Returns the path of the included file.
-        /// The path is expected to be after the string ":r" (line the :r command from sqlcmd)
+        /// Returns the path of the included files.
+        /// The paths are expected to be after the string ":r" (line the :r command from sqlcmd)
         /// ":r" is expected to be at the begining of the file or after the special string "-- no transaction --"
+        /// and then at the beginning of each line
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        static string GetRelativeIncludedFilepath(string sql)
+        public static IList<string> GetRelativeIncludedFilepaths(string sql)
         {
+            var result = new List<string>();
+
             sql = sql.Replace(NoTransactionToken, "");
             sql = sql.Trim();
             if (!sql.StartsWith(":r"))
             {
-                return string.Empty;
+                // if the migration content does not start with :r, then it is a normal migration
+                return result;
             }
 
-            var match = s_reference.Match(sql);
-            if (match.Success)
+            // all the lines should start with :r or contain only white space or comment
+            var lines = sql.Split('\n');
+            foreach (var l in lines)
             {
-                return match.Groups[1].Value.Trim();
+                var line = l.Trim();
+                if (string.IsNullOrEmpty(line) || line.StartsWith("--"))
+                {
+                    // empty line / comment, check next line
+                    continue;;
+                }
+
+                if (line.StartsWith(":r"))
+                {
+                    // the text after ":r" is the path to a file to include
+                    result.Add(line.Substring(2).Trim());
+                }
+                else
+                {
+                    throw new Exception("Invalid migration: if a migration includes files using the command :r then all the lines should " +
+                                        "either include files, contain empty spaces or comments");
+                }
             }
 
-            return string.Empty;
+            return result;
         }
 
         /// <summary>

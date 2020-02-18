@@ -1,0 +1,8 @@
+:r procedures\proc1.sql
+
+select 1
+
+:r procedures\proc1.sql
+
+-- There is a line that does not contain spaces or comments
+-- The migration should fail.
